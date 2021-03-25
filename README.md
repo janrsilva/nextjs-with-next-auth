@@ -1,34 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## This is a Nextjs sample to login to GAV.
 
-## Getting Started
+The project is able to:
+- login an user with GAV username and password
+- login an user with Google account
 
-First, run the development server:
-
+### to intall
+- run
 ```bash
-npm run dev
-# or
-yarn dev
+$ npm i
 ```
+- create a copy of `.env.sample` to a `.env` file
+- set all environments in `.env`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### to copy to another project
+- install the next-auth
+- install some rest-client like axios
+- intall mongodb if you choose use this
+- create a copy of `.env.sample` to a `.env` file
+- set all environments in `.env`
+- create the custom login page /pages/auth/
+- credentials-signin.js or use `signIn('credentials', { username: 'jsmith', password: '1234' })`
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Google
+- set the process.env.GOOGLE_CLIENT_ID and process.env.GOOGLE_CLIENT_SECRET
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+> IMPORTANT!
 
-## Learn More
+There are three notes `@todo` in the code explaining what todo with a token, user and account.
 
-To learn more about Next.js, take a look at the following resources:
+To know how to use the next-auth credentials. [read this](https://next-auth.js.org/configuration/providers#sign-in-with-credentials)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Always that an user login with GAV credentials, you should:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- create or update the user to the database;
+- create or update the account;
+- send the social token to the GAV API;
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+````js
+//pages/api/auth/[...nextauth].js
+export default (req, res) => {
+    return NextAuth(
+        req,
+        res,
+        {
+            events: {
+                signIn: async (message) => {
+                    if (message.isNewUser) {
+                        /**
+                         * @todo
+                         * Here. POST token to GAV API in /auth/social/facebook or /auth/social/google
+                         * Save the response token in user record.
+                         */
+                    }
+                },
+            },
+        ...
+```
